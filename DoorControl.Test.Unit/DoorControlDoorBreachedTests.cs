@@ -1,4 +1,5 @@
 ﻿using DoorControl.Test.Unit.Mocks;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DoorControl.Test.Unit
@@ -13,7 +14,7 @@ namespace DoorControl.Test.Unit
         [SetUp]
         public void Setup()
         {
-            _mockFactory = new MockDoorControlFactory();
+            _mockFactory = Substitute.For<MockDoorControlFactory>();
             _uut = new DoorControl(_mockFactory);
         }
 
