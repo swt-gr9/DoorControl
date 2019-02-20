@@ -57,5 +57,12 @@ namespace DoorControl.Test.Unit
             Alarm.DidNotReceive().SoundAlarm();
         }
 
+        [Test]
+        public void RequestEntry_CardDbDeniesEntryRequest_AlarmNotSoundedd()
+        {
+            _uut.RequestEntry("TFJ");
+            Alarm.DidNotReceive().SoundAlarm();
+        }
+
     }
 }
