@@ -17,12 +17,12 @@
 
         private State _doorState;
 
-        public DoorControl(IDoorControlFactory factory)
+        public DoorControl(IAlarm alarm, IDoor door, IEntryNotification entryNotification, IUserValidation userValidation)
         {
-            _userValidation     = factory.CreateUserValidation();
-            _door               = factory.CreateDoor();
-            _entryNotification  = factory.CreateEntryNotification();
-            _alarm              = factory.CreateAlarm();
+            _userValidation = userValidation;
+            _door = door;
+            _entryNotification = entryNotification;
+            _alarm = alarm;
             _doorState = State.DoorClosed;
         }
 

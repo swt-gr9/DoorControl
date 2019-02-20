@@ -9,20 +9,29 @@ namespace DoorControl.Test.Unit
     public class DoorControlDoorBreachedTests
     {
         private DoorControl _uut;
-        private MockDoorControlFactory _mockFactory;
+        private IAlarm Alarm;
+        private IDoor Door;
+        private IEntryNotification EntryNotification;
+        private IUserValidation UserValidation;
+
 
         [SetUp]
         public void Setup()
         {
-            _mockFactory = Substitute.For<MockDoorControlFactory>();
-            _uut = new DoorControl(_mockFactory);
+            Alarm = Substitute.For<IAlarm>();
+            Door = Substitute.For<IDoor>();
+            EntryNotification = Substitute.For<IEntryNotification>();
+            UserValidation = Substitute.For<IUserValidation>();
+
+
+            _uut = new DoorControl(Alarm, Door, EntryNotification, UserValidation);
         }
 
         [Test]
         public void DoorBreached_DoorStateIsBreached()
         {
             _uut.DoorOpened();  // Breach door
-            Assert.That(_mockFactory.Alarm.WasAlarmCalled, Is.True);
+            Alarm.Received(1).SoundAlarm();
         }
     }
 }
