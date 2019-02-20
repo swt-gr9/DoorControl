@@ -10,59 +10,52 @@ namespace DoorControl.Test.Unit
     public class DoorControlEntryGrantedTests
     {
         private DoorControl _uut;
-        private MockDoorControlFactory _mockFactory;
+        private IAlarm Alarm;
+        private IDoor Door;
+        private IEntryNotification EntryNotification;
+        private IUserValidation UserValidation;
 
         [SetUp]
         public void Setup()
         {
-            _mockFactory = Substitute.For<MockDoorControlFactory>();
-            _uut = new DoorControl(_mockFactory);
-        }
+            Alarm = Substitute.For<IAlarm>();
+            Door = Substitute.For<IDoor>();
+            EntryNotification = Substitute.For<IEntryNotification>();
+            UserValidation = Substitute.For<IUserValidation>();
 
-        [Test]
-        public void RequestEntry_CorrectIdUsedForDbQuery()
-        {
-            _uut.RequestEntry("TFJ");
-            Assert.That(_mockFactory.UserValidation.LastId, Is.EqualTo("TFJ"));
+
+            _uut = new DoorControl(Alarm, Door, EntryNotification, UserValidation);
+            UserValidation.ValidateEntryRequest("TFJ").Returns(true);
+            
         }
 
         [Test]
         public void RequestEntry_CardDbApprovesEntryRequest_DoorOpenCalled()
         {
             _uut.RequestEntry("TFJ");
-            Assert.That(_mockFactory.Door.WasOpenCalled, Is.EqualTo(true));
+            Door.Received().Open();
         }
 
         [Test]
         public void RequestEntry_CardDbApprovesEntryRequest_DoorCloseNotCalled()
         {
             _uut.RequestEntry("TFJ");
-            Assert.That(_mockFactory.Door.WasCloseCalled, Is.EqualTo(false));
+            Door.DidNotReceive().Close();
         }
 
         [Test]
         public void RequestEntry_CardDbApprovesEntryRequest_BeeperMakeHappyNoiseCalled()
         {
             _uut.RequestEntry("TFJ");
-            Assert.That(_mockFactory.EntryNotification.WasNotifyEntryGrantedCalled, Is.EqualTo(true));
+            EntryNotification.Received().NotifyEntryGranted();
         }
 
         [Test]
         public void RequestEntry_CardDbApprovesEntryRequest_BeeperMakeUnhappyNoiseNotCalled()
         {
             _uut.RequestEntry("TFJ");
-            Assert.That(_mockFactory.EntryNotification.WasNotifyEntryDeniedCalled, Is.EqualTo(false));
+            EntryNotification.DidNotReceive().NotifyEntryDenied();
         }
-
-
-        [Test]
-        public void RequestEntry_DoorOpened_DoorIsClosed()
-        {
-            _uut.RequestEntry("TFJ");
-            _uut.DoorOpened();
-            Assert.That(_mockFactory.Door.WasCloseCalled, Is.True);
-        }
-
 
 
         [Test]
@@ -71,7 +64,7 @@ namespace DoorControl.Test.Unit
             _uut.RequestEntry("TFJ");
             _uut.DoorOpened();
             _uut.DoorClosed();
-            Assert.That(_mockFactory.Alarm.WasAlarmCalled, Is.EqualTo(false));
+            Alarm.DidNotReceive().SoundAlarm();
        }
     }
 }

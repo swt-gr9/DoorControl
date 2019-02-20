@@ -9,14 +9,23 @@ namespace DoorControl.Test.Unit
     public class DoorControlEntryDeniedTests
     {
         private DoorControl _uut;
-        private MockDoorControlFactory _mockFactory;
+        private IAlarm Alarm;
+        private IDoor Door;
+        private IEntryNotification EntryNotification;
+        private IUserValidation UserValidation;
 
         [SetUp]
         public void Setup()
         {
-            _mockFactory = Substitute.For<MockDoorControlFactory>();
-            _mockFactory.UserValidation.Validate = false;    // Ensure that validation will fail
-            _uut = new DoorControl(_mockFactory);
+            Alarm = Substitute.For<IAlarm>();
+            Door = Substitute.For<IDoor>();
+            EntryNotification = Substitute.For<IEntryNotification>();
+            UserValidation = Substitute.For<IUserValidation>();
+
+
+            _uut = new DoorControl(Alarm, Door, EntryNotification, UserValidation);
+            UserValidation.ValidateEntryRequest("TFJ").Returns(false);    // Ensure that validation will fail
+            
         }
 
 
@@ -24,27 +33,28 @@ namespace DoorControl.Test.Unit
         public void RequestEntry_CardDbDeniesEntryRequest_DoorNotOpened()
         {
             _uut.RequestEntry("TFJ");
-            Assert.AreEqual(_mockFactory.Door.WasOpenCalled, false);
+            Door.DidNotReceive().Open();
         }
         [Test]
         public void RequestEntry_CardDbDeniesEntryRequest_BeeperMakeUnhappyNoiseCalled()
         {
             _uut.RequestEntry("TFJ");
-            Assert.AreEqual(_mockFactory.EntryNotification.WasNotifyEntryDeniedCalled, true);
+            EntryNotification.Received().NotifyEntryDenied();
         }
 
         [Test]
         public void RequestEntry_CardDbDeniesEntryRequest_BeeperMakeHappyNoiseNotCalled()
         {
+            
             _uut.RequestEntry("TFJ");
-            Assert.AreEqual(_mockFactory.EntryNotification.WasNotifyEntryGrantedCalled, false);
+            EntryNotification.DidNotReceive().NotifyEntryGranted();
         }
 
         [Test]
         public void RequestEntry_CardDbDeniesEntryRequest_AlarmNotSounded()
         {
             _uut.RequestEntry("TFJ");
-            Assert.AreEqual(_mockFactory.Alarm.WasAlarmCalled, false);
+            Alarm.DidNotReceive().SoundAlarm();
         }
 
     }
