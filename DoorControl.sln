@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorControl", "DoorControl\DoorControl.csproj", "{521807F0-C7CF-495B-B197-8E465C2FD7CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorControl.Test.Unit", "DoorControl.Test.Unit\DoorControl.Test.Unit.csproj", "{B5C8757F-09E3-48F5-B3EB-78186A36E4AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E5878E0C-F6D4-46FB-80DC-0488342DCCE2}"
+	ProjectSection(SolutionItems) = preProject
+		dotCoverCoverageConfig.xml = dotCoverCoverageConfig.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +29,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E61D28EA-C30B-47C0-9460-9D845EF95974}
 	EndGlobalSection
 EndGlobal
